@@ -2,9 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include< iostream>
-#include<utility>
 #include<algorithm>
-#include <set>
 using namespace std;
 
 typedef struct my {
@@ -17,12 +15,16 @@ bool sortbysec(const pair<int, int> &a,
 {
 	return (a.second > b.second);
 }
-
+bool sortinrev(const pair<int, string> &a,
+	const pair<int, string> &b)
+{
+	return (a.first > b.first);
+}
 
 
 vector<int> solution(vector<string> genres, vector<int> plays) {
 	vector<int> answer;
-	vector<int> plays_sum_vec;
+	vector<pair<int,string>> plays_sum_vec;
 	unordered_map<string, my> music_map;
 	int index = 0;
 	for (auto a : genres)
@@ -30,32 +32,42 @@ vector<int> solution(vector<string> genres, vector<int> plays) {
 		music_map[a].list.push_back(make_pair(index, plays[index]));
 		index++;
 	}
+	for (auto a : genres)
+	{
+		sort(music_map[a].list.begin(), music_map[a].list.end(), sortbysec);
+
+	}
 	for (auto a : music_map)
 	{
 		for (auto inner_a : a.second.list)
 		{
 			a.second.plays_sum += inner_a.second;
 		}
-		sort(a.second.list.begin(),a.second.list.end(), sortbysec);
 
-		cout << a.second.plays_sum<<endl;
-		plays_sum_vec.emplace_back(a.second.plays_sum);
+		plays_sum_vec.emplace_back(make_pair( a.second.plays_sum,a.first));
+	
 	}
-	sort(plays_sum_vec.begin(), plays_sum_vec.end());
+	sort(plays_sum_vec.begin(), plays_sum_vec.end(), sortinrev);
 	for (auto a : plays_sum_vec)
 	{
-		music_map.
+		int j;
+		for (j = 0; j < 2; j++)
+		{
+			answer.emplace_back( music_map.find(a.second)->second.list[j].first );
+		}
 	}
-	
+	return answer;
 
-	
 }
 
 int main()
 {
 	vector<string> genres = { "classic","pop","classic","classic","pop" };
 	vector<int> plays = { 500,600,150,800,2500 };
-	solution(genres, plays);
-
+	vector <int > answer = solution(genres, plays);
+	for (auto a : answer)
+	{
+		cout << a << endl;
+	}
 
 }
