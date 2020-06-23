@@ -1,0 +1,34 @@
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include<iostream>
+using namespace std;
+
+string solution(vector<string> participant, vector<string> completion) {
+	string answer = "";
+	unordered_map<string, int> v;
+	for (auto& i : participant) v[i]++;
+	for (auto& i : completion) v[i]++;
+	for (auto&i : v)
+	{
+		if (i.second > 0)
+		{
+			answer = i.first;
+			break;
+		}
+	}
+	return answer;
+}
+
+int main()
+{
+	vector<string> participant, completion;
+	participant.emplace_back("leo");
+	participant.emplace_back("kiki");
+	participant.emplace_back("eden");
+	completion.emplace_back("eden");
+	completion.emplace_back("kiki");
+
+	cout << solution(participant,completion) << endl;
+
+}
